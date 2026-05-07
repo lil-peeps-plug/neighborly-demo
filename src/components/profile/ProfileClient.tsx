@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { User } from "@/lib/data";
 import { MOCK_LISTINGS, WISHLIST_TAGS } from "@/lib/data";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { AvatarFill } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 
 export function ProfileClient({ user }: { user: User }) {
@@ -16,8 +16,8 @@ export function ProfileClient({ user }: { user: User }) {
       <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand/15 via-surface to-surface p-8 shadow-glass-lg ring-1 ring-black/[0.05] dark:from-brand/25 dark:via-slate-950 dark:to-slate-950 dark:ring-white/10 sm:p-10">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-3xl ring-4 ring-white/80 shadow-xl dark:ring-slate-800">
-              <Image src={user.avatar} alt="" fill className="object-cover" sizes="112px" />
+            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-3xl text-3xl ring-4 ring-white/80 shadow-xl dark:ring-slate-800">
+              <AvatarFill name={user.name} src={user.avatar || undefined} sizes="112px" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -30,6 +30,9 @@ export function ProfileClient({ user }: { user: User }) {
               </div>
               <p className="mt-1 text-sm text-ink-muted">{user.neighborhood} · Neighborly member</p>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-muted">{user.bio}</p>
+              {user.bioTranslation && (
+                <TranslatedBio translation={user.bioTranslation} sourceLanguage={user.bioLanguage} />
+              )}
             </div>
           </div>
 
@@ -123,6 +126,40 @@ export function ProfileClient({ user }: { user: User }) {
         </div>
       </section>
     </div>
+  );
+}
+
+function TranslatedBio({
+  translation,
+  sourceLanguage,
+}: {
+  translation: string;
+  sourceLanguage?: string;
+}) {
+  return (
+    <div className="mt-3 max-w-xl rounded-xl border border-black/[0.06] bg-white/70 p-3 dark:border-white/10 dark:bg-slate-900/50">
+      <div className="flex items-center gap-2 text-[11px] font-medium text-ink-muted">
+        <GoogleTranslateMark />
+        <span>
+          Translated{sourceLanguage ? ` from ${sourceLanguage}` : ""} by{" "}
+          <span className="font-semibold text-ink">Google</span>
+        </span>
+      </div>
+      <p className="mt-2 text-sm italic leading-relaxed text-ink-muted">{translation}</p>
+    </div>
+  );
+}
+
+function GoogleTranslateMark() {
+  // Google's brand colours so the chip reads as the familiar Translate widget at a glance.
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden className="shrink-0">
+      <path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0" />
+      <path d="M3 12a9 9 0 0 1 17.3-3.5l-2.6 1A6 6 0 1 0 18 14h-6v-2.8h9.4A9 9 0 1 1 3 12z" fill="#4285F4" />
+      <circle cx="6.5" cy="7" r="1.4" fill="#EA4335" />
+      <circle cx="17" cy="6" r="1.2" fill="#FBBC05" />
+      <circle cx="17.6" cy="17.5" r="1.2" fill="#34A853" />
+    </svg>
   );
 }
 

@@ -113,13 +113,6 @@ export function InteractiveMap({ listings, selectedId, onSelect, className }: In
       onMouseUp={endDrag}
       style={{ cursor: isDragging ? "grabbing" : "grab" }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand/18 via-brand/[0.04] to-brand/10 dark:from-brand/28 dark:via-brand/10 dark:to-brand/15" />
-      <div
-        className="absolute inset-[-20%] bg-map-grid opacity-40 dark:opacity-25"
-        style={{ backgroundSize: "48px 48px" }}
-      />
-      <div className="absolute inset-0 bg-hero-mesh opacity-60 dark:opacity-40" />
-
       <div
         className="absolute inset-0 will-change-transform"
         style={{
@@ -128,12 +121,9 @@ export function InteractiveMap({ listings, selectedId, onSelect, className }: In
           transition: isDragging ? "none" : "transform 0.12s ease-out",
         }}
       >
-        <div
-          className="absolute left-1/2 top-1/2 h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 rounded-[3rem] bg-surface-elevated/30 dark:bg-slate-900/20"
-          style={{
-            boxShadow: "inset 0 0 140px rgba(37,150,190,0.14)",
-          }}
-        />
+        <MadridMapTiles />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand/10 via-transparent to-brand/15 mix-blend-soft-light dark:from-brand/25 dark:to-brand/20" />
+        <div className="pointer-events-none absolute inset-0 bg-hero-mesh opacity-50 mix-blend-soft-light dark:opacity-40" />
 
         {clusters.map((item, idx) =>
           item.kind === "pin" ? (
@@ -156,10 +146,74 @@ export function InteractiveMap({ listings, selectedId, onSelect, className }: In
         )}
       </div>
 
-      <div className="pointer-events-none absolute bottom-4 left-4 flex flex-col gap-2">
+      <div className="pointer-events-none absolute bottom-4 left-4 z-[5] flex flex-col gap-2">
         <div className="glass glass-border rounded-xl px-3 py-2 text-xs text-ink-muted">
-          Scroll to zoom · Drag to explore
+          Madrid · Scroll to zoom · Drag to explore
         </div>
+      </div>
+      <a
+        href="https://www.openstreetmap.org/copyright"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="absolute bottom-2 right-3 z-[5] rounded bg-white/85 px-1.5 py-0.5 text-[10px] font-medium text-slate-700 hover:underline dark:bg-slate-900/80 dark:text-slate-200"
+      >
+        © OpenStreetMap
+      </a>
+    </div>
+  );
+}
+
+/**
+ * Mosaic of OSM raster tiles around Madrid (Plaza Mayor area).
+ * No external map library — keeps it light and works with the existing pan/zoom shell.
+ * Tiles get a soft saturate/brightness treatment so the brand-green pins stay the focal point.
+ */
+function MadridMapTiles() {
+  // Pre-computed slippy-map tile coords for lat=40.4168, lon=-3.7038, zoom=13.
+  const z = 13;
+  const cx = 4012;
+  const cy = 3088;
+  const cols = 9;
+  const rows = 7;
+  const tileSize = 256;
+  const startX = cx - Math.floor(cols / 2);
+  const startY = cy - Math.floor(rows / 2);
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none"
+        style={{
+          width: cols * tileSize,
+          height: rows * tileSize,
+          filter: "saturate(0.7) brightness(1.04)",
+        }}
+      >
+        {Array.from({ length: rows }).flatMap((_, r) =>
+          Array.from({ length: cols }).map((_, c) => {
+            const tx = startX + c;
+            const ty = startY + r;
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={`${tx}-${ty}`}
+                src={`https://tile.openstreetmap.org/${z}/${tx}/${ty}.png`}
+                alt=""
+                width={tileSize}
+                height={tileSize}
+                draggable={false}
+                loading="lazy"
+                className="absolute block dark:opacity-90"
+                style={{
+                  left: c * tileSize,
+                  top: r * tileSize,
+                  width: tileSize,
+                  height: tileSize,
+                }}
+              />
+            );
+          }),
+        )}
       </div>
     </div>
   );

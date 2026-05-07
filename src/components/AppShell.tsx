@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-brand/15 bg-surface-elevated/90 py-8 text-center text-xs leading-relaxed text-ink-muted dark:border-brand/20 dark:bg-slate-950/60">
         <p className="mx-auto max-w-2xl px-4">
           Neighborly is a presentation prototype — no real payments, accounts, or pickups. Brand accent{" "}
-          <span className="font-semibold text-brand">#2596BE</span>.
+          <span className="font-semibold text-brand">#16A34A</span>.
         </p>
         <p className="mx-auto mt-3 max-w-2xl px-4 text-[11px] text-ink-muted/90">
           <span className="font-medium text-brand/90">Why run it this way?</span> This app is built with{" "}

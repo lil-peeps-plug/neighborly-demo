@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MOCK_CONVERSATIONS } from "@/lib/data";
+import { AvatarFill } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 
 export function MessagesClient() {
@@ -36,8 +36,8 @@ export function MessagesClient() {
                     c.id === activeId ? "bg-brand/10" : "hover:bg-black/[0.03] dark:hover:bg-white/[0.04]",
                   )}
                 >
-                  <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-2xl">
-                    <Image src={c.peer.avatar} alt="" fill className="object-cover" sizes="44px" />
+                  <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-2xl text-sm">
+                    <AvatarFill name={c.peer.name} src={c.peer.avatar || undefined} sizes="44px" />
                     {c.unread > 0 && (
                       <span className="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white">
                         {c.unread}
@@ -59,8 +59,8 @@ export function MessagesClient() {
           {active && (
             <>
               <div className="flex items-center gap-3 border-b border-black/[0.06] px-5 py-4 dark:border-white/10">
-                <div className="relative h-11 w-11 overflow-hidden rounded-2xl">
-                  <Image src={active.peer.avatar} alt="" fill className="object-cover" sizes="44px" />
+                <div className="relative h-11 w-11 overflow-hidden rounded-2xl text-sm">
+                  <AvatarFill name={active.peer.name} src={active.peer.avatar || undefined} sizes="44px" />
                 </div>
                 <div>
                   <p className="font-semibold text-ink">{active.peer.name}</p>

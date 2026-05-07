@@ -6,6 +6,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Listing } from "@/lib/data";
 import { ReservationModal } from "@/components/reservation/ReservationModal";
+import { AvatarFill } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 
 export function ListingDetailClient({ listing }: { listing: Listing }) {
@@ -92,8 +93,8 @@ export function ListingDetailClient({ listing }: { listing: Listing }) {
 
           <div className="glass glass-border rounded-2xl p-5">
             <div className="flex items-center gap-3">
-              <Link href={`/profile/${listing.owner.id}`} className="relative block h-14 w-14 overflow-hidden rounded-2xl ring-2 ring-brand/20">
-                <Image src={listing.owner.avatar} alt="" fill className="object-cover" sizes="56px" />
+              <Link href={`/profile/${listing.owner.id}`} className="relative block h-14 w-14 overflow-hidden rounded-2xl text-base ring-2 ring-brand/20">
+                <AvatarFill name={listing.owner.name} src={listing.owner.avatar || undefined} sizes="56px" />
               </Link>
               <div className="min-w-0 flex-1">
                 <Link href={`/profile/${listing.owner.id}`} className="font-semibold text-ink hover:text-brand">

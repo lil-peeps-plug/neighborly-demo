@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Listing } from "@/lib/data";
+import { AvatarFill } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 
 export function ListingCard({ listing, index = 0 }: { listing: Listing; index?: number }) {
@@ -62,8 +63,8 @@ export function ListingCard({ listing, index = 0 }: { listing: Listing; index?: 
           </h3>
           <p className="line-clamp-2 text-sm text-ink-muted">{listing.description}</p>
           <div className="mt-auto flex items-center gap-2 border-t border-black/[0.05] pt-3 dark:border-white/[0.08]">
-            <span className="relative h-9 w-9 overflow-hidden rounded-full ring-2 ring-white dark:ring-slate-800">
-              <Image src={listing.owner.avatar} alt="" fill className="object-cover" sizes="36px" />
+            <span className="relative h-9 w-9 overflow-hidden rounded-full text-[11px] ring-2 ring-white dark:ring-slate-800">
+              <AvatarFill name={listing.owner.name} src={listing.owner.avatar || undefined} sizes="36px" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-ink">{listing.owner.name}</p>
